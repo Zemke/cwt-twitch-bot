@@ -1,0 +1,15 @@
+{
+  "name": "cwt-twitch-bot",
+  "version": "0.1.0",
+  "description": "![CI](https://github.com/zemke/cwt/workflows/CI/badge.svg) ![release](https://img.shields.io/github/v/release/zemke/cwt.svg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "cwt-twitch-bot"
+  },
+  "author": "",
+  "license": "ISC"
+}
