@@ -1,29 +1,29 @@
 const https = require('https');
 
 function request(method, path, data) {
-	return new Promise((resolve, reject) => {
-		data = JSON.stringify(data);
-		const options = {
-			hostname: 'cwtsite.com',
-			port: 443,
-			path: "/api/" + path,
-			method,
-			headers: { 'Content-Type': 'application/json' }
-		};
-		if (data != null) options.headers['Content-Length'] = data.length;
-		const req = http.request(options, res => {
-			console.info('status', res.statusCode);
-			let resData = '';
-			res.on('data', d => resData += d);
-			res.on('end', () => {
+  return new Promise((resolve, reject) => {
+    data = JSON.stringify(data);
+    const options = {
+      hostname: 'cwtsite.com',
+      port: 443,
+      path: "/api/" + path,
+      method,
+      headers: { 'Content-Type': 'application/json' }
+    };
+    if (data != null) options.headers['Content-Length'] = data.length;
+    const req = http.request(options, res => {
+      console.info('status', res.statusCode);
+      let resData = '';
+      res.on('data', d => resData += d);
+      res.on('end', () => {
         console.info("response\n", resData);
         resolve(JSON.parse(resData));
       });
-		});
-		req.on('error', error => reject(error));
-		if (data != null && method === 'POST') req.write(data);
-		req.end();
-	});
+    });
+    req.on('error', error => reject(error));
+    if (data != null && method === 'POST') req.write(data);
+    req.end();
+  });
 }
 
 const api = {
