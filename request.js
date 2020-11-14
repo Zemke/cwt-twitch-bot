@@ -11,7 +11,7 @@ function request(method, path, data) {
       headers: { 'Content-Type': 'application/json' }
     };
     if (data != null) options.headers['Content-Length'] = data.length;
-    const req = http.request(options, res => {
+    const req = https.request(options, res => {
       console.info('status', res.statusCode);
       let resData = '';
       res.on('data', d => resData += d);
