@@ -28,7 +28,7 @@ console.info("getting current tournament");
 request.get('tournament/current').then(res => tournament = res);
 
 const commands = [
-    "!cwtchat", "!cwtdice", "!cwthell", "!cwtfavterrain", "!cwtwinners", "!cwtcommands", 
+    "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands",
     "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass"];
 
 async function onMessageHandler(target, context, msg, self) {
@@ -73,7 +73,7 @@ Track the playoffs Hell counter here: cwtsite.com/hell`);
       console.error(e);
       respone(client, target, `Sorry, that topic is too sad, ${name}.`);
     }
-  } else if (command === '!cwtfavterrain') {
+  } else if (command === '!cwtterrain') {
     maps = maps || await request.get(`tournament/${tournament.id}/maps`);
     const result = maps
       .reduce((acc, curr) => {
