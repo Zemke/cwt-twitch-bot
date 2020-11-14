@@ -13,6 +13,8 @@ client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
 client.connect();
 
+const rafkaId = 29;
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
 const grassyTextures = [
   'Data\\Level\\-Farm',
   'Data\\Level\\Jungle',
@@ -92,15 +94,51 @@ Track the playoffs Hell counter here: cwtsite.com/hell`);
           }, [])
           .map(t => `${t[0]} (${t[1].join(', ')})`);
     respond(client, target,
-          `The CWT champions are ${winners.join('; ')}. More at cwtsite.com/archive`);
+          `The CWT champions are ${winners.join(', ')}. More at cwtsite.com/archive`);
+  } else if (command === '!cwtschedule') {
+    const schedule = (await request.get('schedule'))
+          .map(s => {
+            s.appointment = new Date(s.appointment);
+            return s;
+          })
+          .filter(({appointment}) => appointment > Date.now())
+          .map(s =>  {
+            const d = s.appointment;
+            const hours = d.getHours() < 10 ? ('0' + d.getHours()) : ("" + d.getHours());
+            const minutes = d.getMinutes() < 10 ? ('0' + d.getMinutes()) : ("" + d.getMinutes());
+            const formatted = `${months[d.getMonth()]}. ${d.getDate()}, ${hours}:${minutes}`;
+            return `${s.homeUser.username}–${s.awayUser.username} on ${formatted}`;
+          });
+    if (!schedule.length) {
+      respond(client, target, 'No game have been scheduled unfortunately.');
+    } else {
+      respond(client, target,
+            `The following games have been scheduled: ${schedule.join('; ')}.`);
+    }
+  } else if (command === '!cwtplayoffs') {
+    const byRound = (await request.get('tournament/current/game/playoff'))
+            .filter(g => g.reportedAt == null)
+            .reduce((acc, g) => {
+              // todo find possible next opponents
+              const formatted = `${g.homeUser?.username || 'X'}–${g.awayUser?.username || 'X'}`;
+              if (g.playoffRoundLocalized in acc) {
+                acc[g.playoffRoundLocalized] += `, ${formatted}`;
+              } else {
+                acc[g.playoffRoundLocalized] = `${formatted}`;
+              }
+              // todo playoffRoundLocalized seems wrong on the CWT side of things
+              return acc;
+            }, {});
+    const games = Object.keys(byRound).map(k => `${k}: ${byRound[k]}`);
+    respond(client, target, games.join('\n'));
   } else if (command === '!cwtwhatisthisthing') {
     respond(client, target,
-      `Crespo’s Worms Tournament (commonly known as CWT) is a tournament known for its
+        `Crespo’s Worms Tournament (commonly known as CWT) is a tournament known for its
 high-level competition. It was founded by Crespo in July 2002 and has been hosted on a
 yearly basis ever since. More at https://worms2d.info/Crespo%27s_Worms_Tournament`);
   } else if (command === '!cwtrafkagrass') {
     const rafkaGrass = maps
-      .filter(m => m.game.homeUser.id === 6100 || m.game.awayUser.id === 6100)
+      .filter(m => m.game.homeUser.id === rafkaId || m.game.awayUser.id === rafkaId)
       .filter(m => grassyTextures.includes(m.texture))
     respond(client, target,
           `Rafka has rocked ${rafkaGrass.length} grassy maps this year.`);
