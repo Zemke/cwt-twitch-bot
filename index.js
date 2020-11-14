@@ -85,7 +85,7 @@ Track the playoffs Hell counter here: cwtsite.com/hell`);
       }, [])
       .sort((o1, o2) => o2[1] - o1[1])
       .filter((_val, idx) => idx < 3)
-      .map(x => `${x[0].split('\\').pop()} (${x[1]}`);
+      .map(x => `${x[0].split('\\').pop()} (${x[1]})`);
     respond(client, target,
           `The three most used terrains this year are ${result.join(', ')}. More at cwtsite.com/maps`);
   } else if (command === '!cwtwinners') {
