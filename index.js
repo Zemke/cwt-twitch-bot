@@ -71,7 +71,7 @@ async function onMessageHandler(target, context, msg, self) {
 Track the playoffs Hell counter here: cwtsite.com/hell`);
     } catch (e) {
       console.error(e);
-      respone(client, target, 'Sorry, that topic is too sad, ${name}.');
+      respone(client, target, `Sorry, that topic is too sad, ${name}.`);
     }
   } else if (command === '!cwtfavterrain') {
     maps = maps || await request.get(`tournament/${tournament.id}/maps`);
@@ -124,19 +124,27 @@ Track the playoffs Hell counter here: cwtsite.com/hell`);
   } else if (command === '!cwtplayoffs') {
     const byRound = (await request.get('tournament/current/game/playoff'))
             .filter(g => g.reportedAt == null)
-            .reduce((acc, g) => {
-              // todo find possible next opponents
-              const formatted = `${g.homeUser?.username || 'X'}–${g.awayUser?.username || 'X'}`;
+            .filter(g => g.homeUser != null || g.awayUser != null)
+            .reduce((acc, g, idx, arr) => {
+              let homeUser = g.homeUser?.username;
+              let awayUser = g.awayUser?.username;
+              if (g.homeUser == null) {
+                homeUser = possibleOpponents(g, arr).join('/');
+                awayUser = g.awayUser.username;
+              } else if (g.awayUser == null) {
+                awayUser = possibleOpponents(g, arr).join('/');
+                homeUser = g.homeUser.username;
+              }
+              const formatted = `${homeUser}–${awayUser}`;
               if (g.playoffRoundLocalized in acc) {
                 acc[g.playoffRoundLocalized] += `, ${formatted}`;
               } else {
                 acc[g.playoffRoundLocalized] = `${formatted}`;
               }
-              // todo playoffRoundLocalized seems wrong on the CWT side of things
               return acc;
             }, {});
     const games = Object.keys(byRound).map(k => `${k}: ${byRound[k]}`);
-    respond(client, target, games.join('\n'));
+    respond(client, target, games.join(' — '));
   } else if (command === '!cwtwhatisthisthing') {
     respond(client, target,
         `Crespo’s Worms Tournament (commonly known as CWT) is a tournament known for its
@@ -156,6 +164,35 @@ yearly basis ever since. More at https://worms2d.info/Crespo%27s_Worms_Tournamen
 
 function respond(client, target, msg) {
   client.say(target, `[BOT] ${msg}`);
+}
+
+function possibleOpponents(game, games) {
+    const stack = [game];
+    const res = [];
+    while (stack.length) {
+      const curr = stack.splice(0, 1)[0];
+      if (curr.homeUser == null) {
+        const waitingForHome = games.find(x =>
+                  (x.playoff.round === curr.playoff.round - 1
+                   && x.playoff.spot === curr.playoff.spot * 2 - 1));
+        waitingForHome.homeUser != null && res.push(waitingForHome.homeUser.username);
+        waitingForHome.awayUser != null && res.push(waitingForHome.awayUser.username);
+        if (waitingForHome.homeUser == null || waitingForHome.awayUser == null) {
+          stack.push(waitingForHome);
+        }
+      }
+      if (curr.awayUser == null) {
+        const waitingForAway = games.find(x =>
+                  (x.playoff.round === curr.playoff.round - 1
+                   && x.playoff.spot === curr.playoff.spot * 2));
+        waitingForAway.homeUser != null && res.push(waitingForAway.homeUser.username);
+        waitingForAway.awayUser != null && res.push(waitingForAway.awayUser.username);
+        if (waitingForAway.homeUser == null || waitingForAway.awayUser == null) {
+          stack.push(waitingForAway);
+        }
+      }
+    }
+    return res;
 }
 
 function dice() {
