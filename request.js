@@ -7,7 +7,7 @@ setInterval(() => {
 }, 1000 * 60 * 5);
 
 function request(method, path, data) {
-  if (cache[path] != null) return Promise.resolve(cache[path]);
+  if (method === 'GET' && cache[path] != null) return Promise.resolve(cache[path]);
   return new Promise((resolve, reject) => {
     data = JSON.stringify(data);
     const options = {
@@ -25,7 +25,9 @@ function request(method, path, data) {
       res.on('end', () => {
         console.info("response\n", resData);
         const parsed = JSON.parse(resData);
-        cache[path] = parsed;
+        if (method === 'GET') {
+          cache[path] = parsed;
+        }
         resolve(parsed);
       });
     });
