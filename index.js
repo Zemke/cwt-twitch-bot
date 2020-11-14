@@ -1,50 +1,47 @@
 const tmi = require('tmi.js');
+const request = require('./request.js');
 
-// Define configuration options
-const opts = {
+const client = new tmi.client({
   identity: {
     username: process.env.BOT_USERNAME,
-    password: process.env.OAUTH_TOKEN
+    password: process.env.OAUTH_TOKEN,
   },
-  channels: [
-    process.env.CHANNEL_NAME
-  ]
-};
+  channels: [process.env.CHANNEL_NAME],
+});
 
-// Create a client with our options
-const client = new tmi.client(opts);
-
-// Register our event handlers (defined below)
 client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
-
-// Connect to Twitch:
 client.connect();
 
-// Called every time a message comes in
-function onMessageHandler (target, context, msg, self) {
-  if (self) { return; } // Ignore messages from the bot
-
-  // Remove whitespace from chat message
-  const commandName = msg.trim();
-
-  // If the command is known, let's execute it
-  if (commandName === '!d20') {
-    const num = rollDice(commandName);
-    client.say(target, `You rolled a ${num}. Link: https://glitch.com/~twitch-chatbot`);
-    console.log(`* Executed ${commandName} command`);
+async function onMessageHandler (target, context, msg, self) {
+  if (self) return;
+  const command = msg.trim();
+	console.log('target', target);
+	console.log('context', context);
+	const name = context["display-name"];
+  if (command === '!cwturl') {
+		respond(client, target,
+				`Thanks for asking, ${name}, the best site in the wormy world is of course cwtsite.com`);
+		console.info('cmd', command);
+	} else if (command.startsWith('!cwtchat ')) {
+		await request.post('message/twitch', {body: command.slice(9)});
+		respond(client, target, `Your message has been posted, ${name}`);
+	} else if (command === '!cwtdice') {
+		respond(client, target,
+				`Any marginally good bot can roll a dice, right? ${name} has rolled a ${dice()}`);
   } else {
-    console.log(`* Unknown command ${commandName}`);
+		respond(client, target, `Nothing I have to say about this, ${name}.`);
   }
 }
 
-// Function called when the "dice" command is issued
-function rollDice () {
-  const sides = 20;
-  return Math.floor(Math.random() * sides) + 1;
+function respond(client, target, msg) {
+	client.say(target, `[BOT] ${msg}`);
 }
 
-// Called every time the bot connects to Twitch chat
+function rollDice () {
+  return Math.floor(Math.random() * 6) + 1;
+}
+
 function onConnectedHandler (addr, port) {
   console.log(`* Connected to ${addr}:${port}`);
 }

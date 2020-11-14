@@ -1,0 +1,24 @@
+{
+   "emotes" : null,
+   "user-id" : "26092654",
+   "message-type" : "chat",
+   "emotes-raw" : null,
+   "tmi-sent-ts" : "1605313985840",
+   "badge-info" : null,
+   "flags" : null,
+   "badge-info-raw" : null,
+   "room-id" : "26092654",
+   "color" : "#B22222",
+   "badges" : {
+      "broadcaster" : "1"
+   },
+   "display-name" : "ZemkeCWT",
+   "mod" : false,
+   "id" : "6f658cfb-8b52-4452-9868-c54e3886b4f1",
+   "turbo" : false,
+   "username" : "zemkecwt",
+   "client-nonce" : "3733db08181fa161388af856b2866524",
+   "badges-raw" : "broadcaster/1",
+   "user-type" : null,
+   "subscriber" : false
+}
