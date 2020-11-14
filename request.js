@@ -10,14 +10,14 @@ function request(method, path, data) {
 			method,
 			headers: { 'Content-Type': 'application/json' }
 		};
-		if (data != null) options.headersr['Content-Length'] = data.length;
-		const req = https.request(options, res => {
-			console.info('statusCode', res.statusCode);
+		if (data != null) options.headers['Content-Length'] = data.length;
+		const req = http.request(options, res => {
+			console.info('status', res.statusCode);
 			let resData = '';
 			res.on('data', d => resData += d);
 			res.on('end', () => {
         console.info("response\n", resData);
-        resolve(resData);
+        resolve(JSON.parse(resData));
       });
 		});
 		req.on('error', error => reject(error));
@@ -28,10 +28,10 @@ function request(method, path, data) {
 
 const api = {
   post(path, data) {
-    request('POST', path, data);
+    return request('POST', path, data);
   },
   get(path) {
-    request('GET', path);
+    return request('GET', path);
   }
 };
 
