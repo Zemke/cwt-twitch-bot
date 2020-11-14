@@ -144,7 +144,7 @@ Track the playoffs Hell counter here: cwtsite.com/hell`);
               return acc;
             }, {});
     const games = Object.keys(byRound).map(k => `${k}: ${byRound[k]}`);
-    respond(client, target, games.join(' — '));
+    respond(client, target, 'The remaining games are ' + games.join(' — '));
   } else if (command === '!cwtwhatisthisthing') {
     respond(client, target,
         `Crespo’s Worms Tournament (commonly known as CWT) is a tournament known for its
