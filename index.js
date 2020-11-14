@@ -27,16 +27,22 @@ let maps;
 console.info("getting current tournament");
 request.get('tournament/current').then(res => tournament = res);
 
+const commands = [
+    "!cwtchat", "!cwtdice", "!cwthell", "!cwtfavterrain", "!cwtwinners", "!cwtcommands", 
+    "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass"];
+
 async function onMessageHandler(target, context, msg, self) {
   if (self) return;
   const command = msg.trim();
   console.log('target', target);
   console.log('context', context);
+  console.info('cmd', command);
   const name = context["display-name"];
-  if (command === '!cwturl') {
+  if (command === '!cwtcommands') {
+    respond(client, target, `The CWT bot commands are ${commands.join(', ')}.`);
+  } else if (command === '!cwturl') {
     respond(client, target,
         `Thanks for asking, ${name}, the best site in the wormy world is of course cwtsite.com`);
-    console.info('cmd', command);
   } else if (command.startsWith('!cwtchat ')) {
     try {
       await request.post(
