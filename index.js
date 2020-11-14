@@ -29,7 +29,7 @@ request.get('tournament/current').then(res => tournament = res);
 
 const commands = [
     "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands",
-    "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass"];
+    "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass", "!cwturl"];
 
 async function onMessageHandler(target, context, msg, self) {
   if (self) return;
@@ -38,17 +38,23 @@ async function onMessageHandler(target, context, msg, self) {
   console.log('context', context);
   console.info('cmd', command);
   const name = context["display-name"];
-  if (command === '!cwtcommands') {
+  if (command === '!cwtcommands' || command === '!cwt') {
     respond(client, target, `The CWT bot commands are ${commands.join(', ')}.`);
   } else if (command === '!cwturl') {
     respond(client, target,
         `Thanks for asking, ${name}, the best site in the wormy world is of course cwtsite.com`);
-  } else if (command.startsWith('!cwtchat ')) {
+  } else if (command.startsWith('!cwtchat')) {
     try {
+      const message = command.slice(9).trim();
+      if (!message) {
+        respond(client, target,
+            "Enter your message after the command that is then sent to the cwtsite.com chat.");
+        return;
+      }
       await request.post(
         'message/twitch',
         {
-          body: command.slice(9),
+          body: message,
           displayName: name,
           channelName: process.env.CHANNEL_NAME,
         }
@@ -156,14 +162,14 @@ yearly basis ever since. More at https://worms2d.info/Crespo%27s_Worms_Tournamen
       .filter(m => grassyTextures.includes(m.texture))
     respond(client, target,
           `Rafka has rocked ${rafkaGrass.length} grassy maps this year.`);
-  } else {
+  } else if (command.startsWith('!cwt')) {
     respond(client, target, `Nothing I have to say about this, ${name}.`);
   }
   return Promise.resolve();
 }
 
 function respond(client, target, msg) {
-  client.say(target, `[BOT] ${msg}`);
+  client.say(target, `${msg}`);
 }
 
 function possibleOpponents(game, games) {
