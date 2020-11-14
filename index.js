@@ -38,7 +38,7 @@ async function onMessageHandler(target, context, msg, self) {
   console.log('context', context);
   console.info('cmd', command);
   const name = context["display-name"];
-  if (command === '!cwtcommands' || command === '!cwt') {
+  if (command === '!cwtcommands') {
     respond(client, target, `The CWT bot commands are ${commands.join(', ')}.`);
   } else if (command === '!cwturl') {
     respond(client, target,
@@ -162,7 +162,7 @@ yearly basis ever since. More at https://worms2d.info/Crespo%27s_Worms_Tournamen
       .filter(m => grassyTextures.includes(m.texture))
     respond(client, target,
           `Rafka has rocked ${rafkaGrass.length} grassy maps this year.`);
-  } else if (command.startsWith('!cwt')) {
+  } else if (command.startsWith('!cwt') && command !== '!cwt') {
     respond(client, target, `Nothing I have to say about this, ${name}.`);
   }
   return Promise.resolve();
