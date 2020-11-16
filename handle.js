@@ -180,7 +180,10 @@ module.exports = api;
 if (require.main === module) {
   handleMessage(process.argv[2])
     .then(res => console.log('RES xx ' + res))
-    .catch(err => console.error(err))
+    .catch(err => {
+      console.error(err);
+      process.exit(1);
+    })
     .finally(() => process.exit(0));
 }
 
