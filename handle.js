@@ -95,9 +95,9 @@ Track the playoffs Hell counter here: cwtsite.com/hell`);
           .filter(({appointment}) => appointment > Date.now())
           .map(s =>  {
             const d = s.appointment;
-            const hours = d.getHours() < 10 ? ('0' + d.getHours()) : ("" + d.getHours());
-            const minutes = d.getMinutes() < 10 ? ('0' + d.getMinutes()) : ("" + d.getMinutes());
-            const formatted = `${months[d.getMonth()]}. ${d.getDate()}, ${hours}:${minutes}`;
+            const hours = d.getUTCHours() < 10 ? ('0' + d.getUTCHours()) : ("" + d.getUTCHours());
+            const minutes = d.getUTCMinutes() < 10 ? ('0' + d.getUTCMinutes()) : ("" + d.getUTCMinutes());
+            const formatted = `${months[d.getUTCMonth()]}. ${d.getUTCDate()}, ${hours}:${minutes}`;
             return `${s.homeUser.username}–${s.awayUser.username} on ${formatted}`;
           });
     if (!schedule.length) {
