@@ -178,7 +178,7 @@ api.handleMessage = handleMessage;
 module.exports = api;
 
 if (require.main === module) {
-  handleMessage(process.argv[2])
+  handleMessage(process.argv[3], process.argv[2])
     .then(res => console.log('RES xx ' + res))
     .catch(err => {
       console.error(err);

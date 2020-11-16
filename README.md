@@ -1,7 +1,8 @@
 Only the command handling from the command line:
 
 ```
-node handle.js '!cwtcommands' | grep "^RES xx " | gsed 's/^RES xx //g'
+node handle.js 'Zemke' '!cwtcommand' | grep "^RES xx " | gsed 's/^RES xx //g'
+// Nothing I have to say about this, Zemke.
 ```
 
 With environment:
