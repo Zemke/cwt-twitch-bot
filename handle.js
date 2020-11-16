@@ -18,8 +18,6 @@ const commands = [
     "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands",
     "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass", "!cwturl"];
 
-
-
 async function handleMessage(msg, username) {
   const command = msg.trim();
   console.info('cmd', command);
@@ -179,7 +177,7 @@ const api = {};
 api.handleMessage = handleMessage;
 module.exports = api;
 
-if (require.main) {
+if (require.main === module) {
   handleMessage(process.argv[2])
     .then(res => console.log('RES xx ' + res))
     .catch(err => console.error(err))

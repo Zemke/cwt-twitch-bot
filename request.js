@@ -1,4 +1,6 @@
 const https = require('https');
+const http = require('http');
+const EventSource = require('EventSource');
 
 let cache = {};
 
@@ -23,7 +25,6 @@ function request(method, path, data) {
       let resData = '';
       res.on('data', d => resData += d);
       res.on('end', () => {
-        console.info("response\n", resData);
         const parsed = JSON.parse(resData);
         if (method === 'GET') {
           cache[path] = parsed;
@@ -97,7 +98,9 @@ const api = {
     return request('GET', path);
   },
   listen(channels, cb) {
-    return channels(channels, cb);
+    console.info('channels to send to:', channels);
+    console.info('Subsequently joined channels will not receive messages');
+    listenToMessages(channels, cb);
   }
 };
 

@@ -1,7 +1,8 @@
 const tmi = require('tmi.js');
-const EventSource = require('EventSource');
 const {handleMessage} = require('./handle.js');
+const request = require('./request.js');
 
+const channels = [process.env.CHANNEL_NAME];
 const client = new tmi.client({
   options: {
       debug: true
@@ -14,7 +15,7 @@ const client = new tmi.client({
     username: process.env.BOT_USERNAME,
     password: process.env.OAUTH_TOKEN,
   },
-  channels: [process.env.CHANNEL_NAME],
+  channels
 });
 
 client.on('message', onMessageHandler);
@@ -24,15 +25,21 @@ client.connect();
 
 async function onMessageHandler(target, context, msg, self) {
   if (self) return;
-  const response = await handleMessage(msg, context["display-name"]);
-  console.info(`Responding with ${response} to ${target}`);
-  client.say(target, response);
+  try {
+    const response = await handleMessage(msg, context["display-name"]);
+    console.info(`Responding with ${response} to ${target}`);
+    client.say(target, response);
+  } catch (e) {
+    console.warn(e.message);
+  }
 }
 
 function onConnectedHandler (addr, port) {
   console.log(`* Connected to ${addr}:${port}`);
   if (process.env.LISTEN === '1') {
-    request.listenToMessages(client.getChannels, (channel, message) => {
+    console.info("Listening to CWT messages");
+    request.listen(channels, (channel, message) => {
+      console.log('sending "${message}" to ${channel}');
       client.say(channel, message);
     });
   } else {
