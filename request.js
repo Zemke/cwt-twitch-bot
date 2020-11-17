@@ -1,6 +1,6 @@
 const https = require('https');
 const http = require('http');
-const EventSource = require('EventSource');
+const EventSource = require('eventsource');
 const format = require('./format');
 
 let cache = {};
