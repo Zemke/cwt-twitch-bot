@@ -15,8 +15,8 @@ console.info("getting current tournament");
 request.get('tournament/current').then(res => tournament = res);
 
 const commands = [
-    "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands",
-    "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass", "!cwturl"];
+    "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands", "!cwt
+    "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass", "!cwturl", "!cwtgithub"];
 
 const newsTypeAssoc = {
   DISCORD: 'DISCORD_MESSAGE',
@@ -104,6 +104,8 @@ Track the playoffs Hell counter here: cwtsite.com/hell`);
     } else {
       return (`The following games have been scheduled: ${schedule.join('; ')}.`);
     }
+  } else if (command === '!cwtgithub') {
+    return "CWT including all of its sub-services are open source: https://github.com/cwt-wa";
   } else if (command === '!cwtplayoffs') {
     const byRound = (await request.get('tournament/current/game/playoff'))
             .filter(g => g.reportedAt == null)
