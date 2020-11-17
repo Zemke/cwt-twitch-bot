@@ -10,7 +10,7 @@ function format({category, author, body, newsType}) {
   } else if (newsType === "RATING") {
     const [gameid, home, away, scoreh, scorea, rating] = body.split(',');
     res += `${rating}d ${home} ${scoreh}–${scorea} ${away} (https://cwtsite.com/games/${gameid})`;
-  } else if (newsType === "STREAM" || newsType === "TWITCH_MESSAGE") {
+  } else if (newsType === "STREAM" || newsType === "TWITCH_MESSAGE" || newsType === "DISCORD_MESSAGE") {
     console.info("Ignoring newsType", newsType);
   } else {
     console.warn("Unhandled newsType:", newsType);
