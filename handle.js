@@ -94,7 +94,6 @@ Track the playoffs Hell counter here: cwtsite.com/hell`);
           .map(t => `${t[0]} (${t[1].join(', ')})`);
     return (`The CWT champions are ${winners.join(', ')}. More at cwtsite.com/archive`);
   } else if (command === '!cwtschedule') {
-    // TODO GMT?
     const schedule = (await request.get('schedule'))
           .map(s => {
             s.appointment = new Date(s.appointment);
