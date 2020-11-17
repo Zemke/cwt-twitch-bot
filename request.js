@@ -61,8 +61,13 @@ function listenToMessages(channels, cb) {
     channels.forEach(channel => {
       if (!(channel in posted)) posted[channel] = [];
       if (!posted[channel].includes(message.id)) {
+        if (message.newsType === 'TWITCH_MESSAGE'
+            && message.body.split(',')[1].search(new RegExp(`\\b${channel}\\b`))) {
+          console.info("Message is from this same Twitch channel.", channel);
+          return;
+        }
         console.info(`Scheduling for sending message to ${channel}`);
-        cb(channel, format(message));
+        cb(channel, format({...message, author: message.author.username}));
         posted[channel].push(message.id);
       } else {
         console.info(`${channel} already received message.`);
