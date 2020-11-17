@@ -33,6 +33,7 @@ async function handleMessage(msg, username, service) {
     return (`Thanks for asking, ${name}, the best site in the wormy world is of course cwtsite.com`);
   } else if (command.startsWith('!cwtchat')) {
     try {
+      const message = command.slice(9);
       if (!message) {
         return ("Enter your message after the command that is then sent to the cwtsite.com chat.");
       }
