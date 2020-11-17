@@ -18,7 +18,12 @@ const commands = [
     "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands",
     "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass", "!cwturl"];
 
-async function handleMessage(msg, username) {
+const newsType = {
+  DISCORD: 'DISCORD_MESSAGE',
+  TWITCH: 'TWITCH_MESSAGE',
+};
+
+async function handleMessage(msg, username, service) {
   const command = msg.trim();
   console.info('cmd', command);
   const name = username || '' ;
@@ -31,12 +36,15 @@ async function handleMessage(msg, username) {
       if (!message) {
         return ("Enter your message after the command that is then sent to the cwtsite.com chat.");
       }
+      const newsType = newsType[service];
+      if (newsType == null) throw Error(`newsTypes are ${newsType}, service given is ${service}`);
       await request.post(
         'message/twitch',
         {
           body: message,
           displayName: name,
           channelName: process.env.CHANNEL_NAME,
+          newsType,
         }
       );
       return (`Your message has been posted, ${name}.`);
@@ -177,7 +185,7 @@ api.handleMessage = handleMessage;
 module.exports = api;
 
 if (require.main === module) {
-  handleMessage(process.argv[3], process.argv[2])
+  handleMessage(process.argv[4], process.argv[3], process.argv[2])
     .then(res => console.log('RES xx ' + res))
     .catch(err => {
       console.error(err);
