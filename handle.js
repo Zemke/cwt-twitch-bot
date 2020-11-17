@@ -18,12 +18,12 @@ const commands = [
     "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands",
     "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass", "!cwturl"];
 
-const newsType = {
+const newsTypeAssoc = {
   DISCORD: 'DISCORD_MESSAGE',
   TWITCH: 'TWITCH_MESSAGE',
 };
 
-async function handleMessage(msg, username, service) {
+async function handleMessage(msg, username, service, link) {
   const command = msg.trim();
   console.info('cmd', command);
   const name = username || '' ;
@@ -37,17 +37,9 @@ async function handleMessage(msg, username, service) {
       if (!message) {
         return ("Enter your message after the command that is then sent to the cwtsite.com chat.");
       }
-      const newsType = newsType[service];
+      const newsType = newsTypeAssoc[service];
       if (newsType == null) throw Error(`newsTypes are ${newsType}, service given is ${service}`);
-      await request.post(
-        'message/twitch',
-        {
-          body: message,
-          displayName: name,
-          channelName: process.env.CHANNEL_NAME,
-          newsType,
-        }
-      );
+      await request.post( 'message/third-party', { body: message, displayName: name, link, newsType });
       return (`Your message has been posted, ${name}.`);
     } catch (e) {
       console.error(e);
@@ -185,7 +177,8 @@ api.handleMessage = handleMessage;
 module.exports = api;
 
 if (require.main === module) {
-  handleMessage(process.argv[4], process.argv[3], process.argv[2])
+  const [_1, _2, service, link, username, message] = process.argv;
+  handleMessage(message, username, service, link)
     .then(res => console.log('RES xx ' + res))
     .catch(err => {
       console.error(err);

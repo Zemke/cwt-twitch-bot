@@ -1,7 +1,7 @@
 Only the command handling from the command line:
 
 ```
-node handle.js 'TWITCH' 'Zemke' '!cwtcommand' | grep "^RES xx " | gsed 's/^RES xx //g'
+node handle.js 'TWITCH' 'https://twitch.tv/zemkecwt' 'Zemke' '!cwtcommand' | grep "^RES xx " | gsed 's/^RES xx //g'
 // Nothing I have to say about this, Zemke.
 ```
 

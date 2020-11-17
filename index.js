@@ -26,7 +26,9 @@ client.connect();
 async function onMessageHandler(target, context, msg, self) {
   if (self) return;
   try {
-    const response = await handleMessage(msg, context["display-name"], 'TWITCH');
+    const response = await handleMessage(
+        msg, context["display-name"], 'TWITCH',
+        'https://twitch.tv/' + target);
     console.info(`Responding with ${response} to ${target}`);
     client.say(target, response);
   } catch (e) {
