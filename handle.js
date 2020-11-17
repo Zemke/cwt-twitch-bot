@@ -15,7 +15,7 @@ console.info("getting current tournament");
 request.get('tournament/current').then(res => tournament = res);
 
 const commands = [
-    "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands", "!cwt
+    "!cwtchat", "!cwtdice", "!cwthell", "!cwtterrain", "!cwtwinners", "!cwtcommands",
     "!cwtschedule", "!cwtplayoffs", "!cwtwhatisthisthing", "!cwtrafkagrass", "!cwturl", "!cwtgithub"];
 
 const newsTypeAssoc = {
