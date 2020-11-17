@@ -41,7 +41,7 @@ function onConnectedHandler (addr, port) {
   if (process.env.LISTEN === '1') {
     console.info("Listening to CWT messages");
     request.listen(channels, (channel, message) => {
-      console.log('sending "${message}" to ${channel}');
+      console.log(`sending "${message}" to ${channel}`);
       client.say(channel, message);
     });
   } else {
