@@ -1,8 +1,9 @@
 const tmi = require('tmi.js');
 const {handleMessage} = require('./handle.js');
 const request = require('./request.js');
+const Endpoint = require('./endpoint');
 
-const channels = [process.env.CHANNEL_NAME];
+const channels = [];
 const client = new tmi.client({
   options: {
       debug: true
@@ -20,7 +21,11 @@ const client = new tmi.client({
 
 client.on('message', onMessageHandler);
 client.on('connected', onConnectedHandler);
-client.connect();
+client.connect().then(() => {
+  const port = process.argv[2] || 1234;
+  const endpoint = new Endpoint(port, client);
+  endpoint.listen();
+});
 
 
 async function onMessageHandler(target, context, msg, self) {
