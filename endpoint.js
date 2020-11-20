@@ -12,6 +12,7 @@ class Endpoint {
     this.channels = [];
   }
 
+  // TODO auth with CWT so that only the channel owner can make the bot join
   listen() {
     this.server = http.createServer((req, res) => {
       if (req.url === '/favicon.ico') return this._end(res, 404, null);
