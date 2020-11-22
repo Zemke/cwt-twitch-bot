@@ -15,7 +15,6 @@ class Server {
     this.channels = [];
   }
 
-  // TODO auth with CWT so that only the channel owner can make the bot join
   listen(ssl = false) {
     logger.info("Using SSL:", ssl);
     this.server = (ssl ? https : http).createServer((req, res) => {
