@@ -1,4 +1,4 @@
-const request = require('./request.js');
+const request = require('./request.js'); // TODO This is now Client
 
 const rafkaId = 29;
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
