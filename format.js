@@ -4,14 +4,16 @@ function format({category, author, body, newsType}) {
   }
   let res = author + " ";
   if (newsType === "REPORT" || newsType === "COMMENT") {
-    const [gameid, home, away, scoreh, scorea] = body.split(',');
+    const [gameId, home, away, scoreh, scorea] = body.split(',');
     res += `${newsType.toLowerCase()}ed ${home} ${scoreh}–${scorea} ${away} \
-(https://cwtsite.com/games/${gameid})`.trim();
+(https://cwtsite.com/games/${gameId})`.trim();
   } else if (newsType === "RATING") {
-    const [gameid, home, away, scoreh, scorea, rating] = body.split(',');
-    res += `${rating}d ${home} ${scoreh}–${scorea} ${away} (https://cwtsite.com/games/${gameid})`;
+    const [gameId, home, away, scoreh, scorea, rating] = body.split(',');
+    res += `${rating}d ${home} ${scoreh}–${scorea} ${away} (https://cwtsite.com/games/${gameId})`;
   } else if (newsType === "STREAM" || newsType === "TWITCH_MESSAGE" || newsType === "DISCORD_MESSAGE") {
     console.info("Ignoring newsType", newsType);
+  } else if (newsType === "SCHEDULE") {
+
   } else {
     console.warn("Unhandled newsType:", newsType);
   }
