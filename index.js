@@ -1,19 +1,19 @@
 const tmi = require('tmi.js');
-const {handleMessage} = require('./handle.js');
 const logger = require('./logger')('Index');
 const Client = require('./client.js');
 
 class Index {
   
-  constructor(tmiClient, listener, server) {
+  constructor(tmiClient, listener, server, messageHandler) {
     this.tmiClient = tmiClient;
     this.listener = listener;
     this.server = server;
+    this.messageHandler = messageHandler;
   }
 
-  onMessage(target, context, msg) {
+  async onMessage(target, context, msg) {
     try {
-      const response = await handleMessage(
+      const response = await this.messageHandler.handleMessage(
           msg, context["display-name"], 'TWITCH',
           'https://twitch.tv/' + target);
       logger.info(`Responding with ${response} to ${target}`);
@@ -53,6 +53,8 @@ class Index {
   }
 }
 
+module.exports = (...args) => new Index(...args);
+
 if (require.main === module) {
   const client = new tmi.client({
     options: {
@@ -77,14 +79,16 @@ if (require.main === module) {
 
   const Server = require('./server')(client, port);
   const Listener = require('./listener')({...options, path: '/api/message/listen'});
-  const Index = new Index(client, Listener, Server);
+  const Client = require('./client.js')(options);
+  const MessageHandler = require('./handle.js')(Client);
+  const Index = new Index(client, Listener, Server, MessageHandler);
 
-  client.on('message', (target, context, msg, self) {
+  client.on('message', (target, context, msg, self) => {
     if (self) return;
     Index.onMessage(target, context, msg);
   });
 
-  client.on('connected', (addr, port) {
+  client.on('connected', (addr, port) => {
     Index.onConnection(addr, port);
   });
 
