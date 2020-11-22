@@ -42,5 +42,8 @@ class Logger {
   exception(message, e) { console.error(helper.color('red', `${helper.fmt(this.realm, null, [message])}: ${e?.stack}`)); }
 }
 
+// TODO Promise.resolve(true).then(logging.info) fails, meybe we could
+//  do some kind of "shielding" with function() {} wrapping
+
 module.exports = realm => new Logger(realm);
 
