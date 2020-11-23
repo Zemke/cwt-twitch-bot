@@ -40,7 +40,7 @@ class Server {
         return;
       }
       channel = channel.toLowerCase();
-      const token = this._token(req.headers);
+      const token = req.headers["authorization"]
       logger.info("token is", token);
       this._dispatch(action, channel, token)
         .then(dispatching => {
