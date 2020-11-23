@@ -20,14 +20,14 @@ class Client {
       return this.cache[path];
     }
     logger.info('GET', path);
-    const res = await outerSpace.get(path, options);
+    const res = await this.outerSpace.get(path, options);
     if (!this.neverCache) this.cache[path] = res;
     return res;
   }
 
   async post(path, payload, options) {
     logger.info('POST', path);
-    return await outerSpace.post(path, payload, options);
+    return await this.outerSpace.post(path, payload, options);
   }
 }
 
