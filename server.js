@@ -52,24 +52,24 @@ class Server {
           this._end(res, 400, {err});
         });
     });
-    this.server.listen(this.port);
     logger.info('listening to port', this.port);
+    this.server.listen(this.port);
   }
 
   async checkWithCwt(channel, authToken) {
-    const headers = {'Authorization': 'Bearer ' + authToken},
+    const headers = {'Authorization': authToken};
     return this.cwtClient.get(
         `/api/channel/${channel}/write-access`,
         {headers});
   }
 
-  async _dispatch(action, channel) {
+  async _dispatch(action, channel, authToken) {
     if (action === 'status') {
       return this.status(channel);
     } else if (action === 'join') {
-      return this.join(channel);
+      return this.join(channel, authToken);
     } else if (action === 'part') {
-      return this.part(channel);
+      return this.part(channel, authToken);
     } else {
       return Promise.reject("no handler");
     }
@@ -83,7 +83,7 @@ class Server {
     return joined;
   }
 
-  async part(channel) {
+  async part(channel, authToken) {
     const isAllowed = await this.checkWithCwt(channel, authToken);
     !isAllowed && throw Error('Forbidden');
     const parted = await this.tmiClient.part(channel);
