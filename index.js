@@ -99,6 +99,26 @@ if (require.main === module) {
     index.onConnection(addr, port);
   });
 
+  client.on("join", (channel, username, self) => {
+    if (!self) return;
+    setTimeout(() => {
+      logger.info(`Joined ${channel}, saying hello.`);
+      let msg = `Hello, ${channel}, I'm standing by for all questions related to CWT.`;
+      const args = ["!cwtcommands", channel, 'TWITCH', 'https://twitch.tv/' + channel];
+      const response = MessageHandler.handleMessage(...args).then(res => {
+        msg += " These are my commands: " + res;
+        client.say(channel, msg);
+      });
+    }, 1);
+  });
+
+  client.on("part", (channel, username, self) => {
+    if (!self) return;
+    logger.info(`Parting ${channel}, saying goodbye.`);
+    let msg = `Hello, ${channel}, I'm standing by for all questions related to CWT.`;
+    client.say(channel, "I'm off. Goodbye everyone! Catch up on the latest at cwtsite.com");
+  });
+
   client.connect().then(() => {
     Server.listen(options.protocol === 'https');
   });
