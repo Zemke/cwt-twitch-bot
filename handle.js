@@ -1,3 +1,4 @@
+require('dotenv').config();
 
 const rafkaId = 29;
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
@@ -52,7 +53,7 @@ class MessageHandler {
   constructor(client) {
     this.client = client;
     console.info("getting current tournament");
-    this.client.get('tournament/current').then(res => this.tournament = res);
+    this.client.get('/api/tournament/current').then(res => this.tournament = res);
   }
 
   async handleMessage(msg, username, service, link) {
@@ -71,7 +72,7 @@ class MessageHandler {
         }
         const newsType = newsTypeAssoc[service];
         if (newsType == null) throw Error(`newsTypes are ${newsType}, service given is ${service}`);
-        await this.client.post( 'message/third-party', { body: message, displayName: name, link, newsType });
+        await this.client.post('/api/message/third-party', { body: message, displayName: name, link, newsType });
         return (`Your message has been posted, ${name}.`);
       } catch (e) {
         console.error(e);
@@ -83,7 +84,7 @@ class MessageHandler {
     } else if (command === '!cwthell') {
       try {
         console.info("tournament", this.tournament);
-        maps = maps || await this.client.get(`tournament/${this.tournament.id}/maps`);
+        maps = maps || await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
         const hell = maps.filter(m => m.texture === 'Data\\Level\\Hell')
         return (`Hell terrain has been played ${hell.length} times this year. There's potential for more.
   Track the playoffs Hell counter here: cwtsite.com/hell`);
@@ -92,7 +93,7 @@ class MessageHandler {
         respone(client, target, `Sorry, that topic is too sad, ${name}.`);
       }
     } else if (command === '!cwtterrain') {
-      maps = maps || await this.client.get(`tournament/${this.tournament.id}/maps`);
+      maps = maps || await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
       const result = maps
         .reduce((acc, curr) => {
           if (curr.texture == null) return acc;
@@ -106,7 +107,7 @@ class MessageHandler {
         .map(x => `${x[0].split('\\').pop()} (${x[1]})`);
       return (`The three most used terrains this year are ${result.join(', ')}. More at cwtsite.com/maps`);
     } else if (command === '!cwtwinners') {
-      const winners = (await this.client.get('tournament'))
+      const winners = (await this.client.get('/api/tournament'))
             .sort((t1, t2) => new Date(t1.created).getTime() - new Date(t2.created).getTime())
             .reduce((acc, curr) => {
               if (curr.goldWinner == null) return acc;
@@ -118,7 +119,7 @@ class MessageHandler {
             .map(t => `${t[0]} (${t[1].join(', ')})`);
       return (`The CWT champions are ${winners.join(', ')}. More at cwtsite.com/archive`);
     } else if (command === '!cwtschedule') {
-      const schedule = (await this.client.get('schedule'))
+      const schedule = (await this.client.get('/api/schedule'))
             .map(s => {
               s.appointment = new Date(s.appointment);
               return s;
@@ -139,7 +140,7 @@ class MessageHandler {
     } else if (command === '!cwtgithub') {
       return "CWT including all of its sub-services are open source: https://github.com/cwt-wa";
     } else if (command === '!cwtplayoffs') {
-      const byRound = (await this.client.get('tournament/current/game/playoff'))
+      const byRound = (await this.client.get('/api/tournament/current/game/playoff'))
               .filter(g => g.reportedAt == null)
               .filter(g => g.homeUser != null || g.awayUser != null)
               .reduce((acc, g, idx, arr) => {
@@ -182,11 +183,10 @@ module.exports = client => new MessageHandler(client);
 
 if (require.main === module) {
   const [_1, _2, service, link, username, message] = process.argv;
-  // TODO Externalize config
   const options = {
-    hostname: "cwtsite.com",
-    port: 443,
-    protocal: "https",
+    protocol: process.env.PROTOCOL,
+    hostname: process.env.HOSTNAME,
+    port: parseInt(process.env.PORT),
   };
   const client = require('./client')(options, 0);
   const messageHandler = new MessageHandler(client);

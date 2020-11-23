@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const tmi = require('tmi.js');
 const logger = require('./logger')('Index');
 const Client = require('./client.js');
@@ -71,10 +73,9 @@ if (require.main === module) {
     channels: [],
   });
 
-  const options = {
-    protocol: 'https',
-    hostname: 'cwtsite.com',
-    port: 443,
+  const options = { protocol: process.env.PROTOCOL,
+    hostname: process.env.HOSTNAME,
+    port: parseInt(process.env.PORT),
   };
 
   const Server = require('./server')(client, port);
@@ -97,3 +98,4 @@ if (require.main === module) {
     Server.listen(options.protocol === 'https');
   });
 }
+
