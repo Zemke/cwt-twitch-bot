@@ -19,28 +19,30 @@ describe('client', () => {
   });
 
   test('GET caches', async () => {
-    const Client = client(options, -1);
     const res = ({id: 1, body: 'message'});
-    outerSpace.get = jest.fn(() => res);
+    const get = jest.fn(() => res);
+    outerSpace.mockImplementation(() => ({get}));
+    const Client = client(options, -1);
     const res1 = await Client.get('something');
     const res2 = await Client.get('something');
     const res3 = await Client.get('something');
     const res4 = await Client.get('something');
-    expect(outerSpace.get).toHaveBeenCalledTimes(1);
+    expect(get).toHaveBeenCalledTimes(1);
     expect(res1).toEqual(res2);
     expect(res1).toEqual(res3);
     expect(res1).toEqual(res4);
   });
 
   test('POST doesn\'t cache', async () => {
-    const Client = client(options, 0);
     const res = ({id: 1, body: 'message'});
-    outerSpace.post = jest.fn(() => res);
+    const post = jest.fn(() => res);
+    outerSpace.mockImplementation(() => ({post}));
+    const Client = client(options, 0);
     const res1 = await Client.post('something');
     const res2 = await Client.post('something');
     const res3 = await Client.post('something');
     const res4 = await Client.post('something');
-    expect(outerSpace.post).toHaveBeenCalledTimes(4);
+    expect(post).toHaveBeenCalledTimes(4);
     expect(res1).toEqual(res2);
     expect(res1).toEqual(res3);
     expect(res1).toEqual(res4);
