@@ -26,8 +26,8 @@ class Index {
     }
   }
 
-  onConnection() {
-    logger.log(`* Connected to ${addr}:${port}`);
+  onConnection(addr, port) {
+    logger.info(`* Connected to ${addr}:${port}`);
     if (process.env.LISTEN === '1') {
       this.listen();
     } else {
