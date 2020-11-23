@@ -91,9 +91,6 @@ class Server {
     return parted;
   }
 
-  // TODO need persistence maybe?
-  //  won't need persistence if the bot parts all channels
-  //  when the server goes down
   // TODO listen to kick events more ways to join/part a channel
   //  to keep track
   status(channel) {
