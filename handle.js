@@ -84,7 +84,7 @@ class MessageHandler {
     } else if (command === '!cwthell') {
       try {
         console.info("tournament", this.tournament);
-        maps = maps || await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
+        const maps = await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
         const hell = maps.filter(m => m.texture === 'Data\\Level\\Hell')
         return (`Hell terrain has been played ${hell.length} times this year. There's potential for more.
   Track the playoffs Hell counter here: cwtsite.com/hell`);
@@ -93,7 +93,7 @@ class MessageHandler {
         respone(client, target, `Sorry, that topic is too sad, ${name}.`);
       }
     } else if (command === '!cwtterrain') {
-      maps = maps || await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
+      const maps = await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
       const result = maps
         .reduce((acc, curr) => {
           if (curr.texture == null) return acc;
