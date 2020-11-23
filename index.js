@@ -3,6 +3,7 @@ require('dotenv').config();
 const tmi = require('tmi.js');
 const logger = require('./logger')('Index');
 const Client = require('./client.js');
+const format = require('./format.js');
 
 class Index {
   
@@ -28,30 +29,34 @@ class Index {
   onConnection() {
     logger.log(`* Connected to ${addr}:${port}`);
     if (process.env.LISTEN === '1') {
-      logger.info("Listening to CWT messages");
-      const posted = {};
-      this.listener.listen(message => {
-        this.server.channels.forEach(channel => {
-          if (!(channel in posted)) posted[channel] = [];
-          if (!posted[channel].includes(message.id)) {
-            if (message.newsType === 'TWITCH_MESSAGE'
-                && message.body.split(',')[1].search(new RegExp(`\\b${channel}\\b`))) {
-              logger.info("Message is from this same Twitch channel.", channel);
-              return;
-            }
-            logger.info(`Scheduling for sending message to ${channel}`);
-            const formatted = format({...message, author: message.author.username});
-            logger.log(`sending "${formatted}" to ${channel}`);
-            this.tmiClient.say(channel, formatted);
-            posted[channel].push(message.id);
-          } else {
-            logger.info(`${channel} already received message.`);
-          }
-        });
-      });
+      this.listen();
     } else {
       logger.info("Set env LISTEN to 1 to listen for CWT chat messages.");
     }
+  }
+
+  listen() {
+    logger.info("Listening to CWT messages");
+    const posted = {};
+    this.listener.listen(message => {
+      this.server.channels.forEach(channel => {
+        if (!(channel in posted)) posted[channel] = [];
+        if (!posted[channel].includes(message.id)) {
+          if (message.newsType === 'TWITCH_MESSAGE'
+              && message.body.split(',')[1].search(new RegExp(`\\b${channel}\\b`))) {
+            logger.info("Message is from this same Twitch channel.", channel);
+            return;
+          }
+          logger.info(`Scheduling for sending message to ${channel}`);
+          const formatted = format({...message, author: message.author.username});
+          logger.info(`sending "${formatted}" to ${channel}`);
+          this.tmiClient.say(channel, formatted);
+          posted[channel].push(message.id);
+        } else {
+          logger.info(`${channel} already received message.`);
+        }
+      });
+    });
   }
 }
 

@@ -7,7 +7,7 @@ describe('index', () => {
   beforeAll(() => {
   });
 
-  test('test', async () => {
+  test('onMessage', async () => {
     const say = jest.fn();
     const tmiClient = {say};
     const handleResponse = "this is the response from handle fn";
@@ -23,6 +23,22 @@ describe('index', () => {
         "!cwtcommands", "ZemkeCWT", "TWITCH", 'https://twitch.tv/zemkecwt');
     expect(say).toHaveBeenCalledTimes(1);
     expect(handleMessage).toHaveBeenCalledTimes(1);
+  });
+
+  test('listen', () => {
+    const say = jest.fn();
+    const tmiClient = {say};
+    const message = {
+      author: {username: "Zemke"},
+      body: "Hello, World!",
+      category: "SHOUTBOX"
+    };
+    const listen = jest.fn(cb => cb(message));
+    const listener = {listen};
+    const server = {channels: ["zemkecwt"]};
+    const index = Index(tmiClient, listener, server, null);
+    index.listen();
+    expect(say).toHaveBeenCalledWith("zemkecwt", "Zemke via CWT: “Hello, World!”");
   });
 });
 
