@@ -1,10 +1,10 @@
 {
-  "name": "cwt-twitch-bot",
+  "name": "twitch-bot",
   "version": "0.1.0",
-  "description": "![CI](https://github.com/zemke/cwt/workflows/CI/badge.svg) ![release](https://img.shields.io/github/v/release/zemke/cwt.svg)",
+  "description": "beep boop",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -13,7 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "eventsource": "^1.0.7",
     "tmi.js": "^1.5.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "jest-mock-promise": "^1.1.10"
   }
 }
