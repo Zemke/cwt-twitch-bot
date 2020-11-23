@@ -120,7 +120,7 @@ if (require.main === module) {
   });
 
   client.connect().then(() => {
-    Server.listen(options.protocol === 'https');
+    Server.listen(false);
   });
 }
 
