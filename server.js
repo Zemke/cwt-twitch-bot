@@ -19,6 +19,11 @@ class Server {
     logger.info("Using SSL:", ssl);
     this.server = (ssl ? https : http).createServer((req, res) => {
       if (req.url === '/favicon.ico') return this._end(res, 404, null);
+      if (req.method === 'OPTIONS') {
+        res.statusCode = 200;
+        this._headers(res);
+        return res.end();
+      }
       res.setHeader('Content-Type', 'application/json')
       logger.info('incoming', req.url);
       const segments = req.url.split('/')
