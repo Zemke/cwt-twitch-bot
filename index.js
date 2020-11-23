@@ -83,23 +83,23 @@ if (require.main === module) {
     port: parseInt(process.env.PORT),
   };
 
-  const Server = require('./server')(client, port);
+  const port = process.argv[2] || 1234;
   const Listener = require('./listener')({...options, path: '/api/message/listen'});
   const Client = require('./client.js')(options);
+  const Server = require('./server')(port, client, Client);
   const MessageHandler = require('./handle.js')(Client);
-  const Index = new Index(client, Listener, Server, MessageHandler);
+  const index = new Index(client, Listener, Server, MessageHandler);
 
   client.on('message', (target, context, msg, self) => {
     if (self) return;
-    Index.onMessage(target, context, msg);
+    index.onMessage(target, context, msg);
   });
 
   client.on('connected', (addr, port) => {
-    Index.onConnection(addr, port);
+    index.onConnection(addr, port);
   });
 
   client.connect().then(() => {
-    const port = process.argv[2] || 1234;
     Server.listen(options.protocol === 'https');
   });
 }

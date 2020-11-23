@@ -14,7 +14,7 @@ class OuterSpace {
   }
 
   post(path, payload, options={}) {
-    return this.request('GET', path, payload, options);
+    return this.request('POST', path, payload, options);
   }
 
   request(method, path, payload, options) {
