@@ -103,6 +103,7 @@ class Server {
   }
 
   _end(res, code, body) {
+    this._headers(res);
     logger.info('responding', code, body);
     res.statusCode = code;
     res.end(JSON.stringify(body));
@@ -115,6 +116,13 @@ class Server {
       return null;
     }
     return headerSplit.pop();
+  }
+
+  _headers(res) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Methods", "*");
+    res.setHeader("Content-Type", "application/json");
   }
 }
 
