@@ -77,7 +77,7 @@ class Server {
 
   async join(channel, authToken) {
     const isAllowed = await this.checkWithCwt(channel, authToken);
-    !isAllowed && throw Error('Forbidden');
+    if (!isAllowed) throw Error('Forbidden');
     const joined = await this.tmiClient.join(channel);
     this.channels.push(channel);
     return joined;
@@ -85,7 +85,7 @@ class Server {
 
   async part(channel, authToken) {
     const isAllowed = await this.checkWithCwt(channel, authToken);
-    !isAllowed && throw Error('Forbidden');
+    if (!isAllowed) throw Error('Forbidden');
     const parted = await this.tmiClient.part(channel);
     this.channels.splice(this.channels.indexOf(channel), 1);
     return parted;
