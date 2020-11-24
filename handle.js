@@ -58,7 +58,7 @@ class MessageHandler {
 
   async handleMessage(msg, username, service, link) {
     const command = msg.trim();
-    console.info('cmd', command);
+    console.info(`cmd ${username}:`, command);
     const name = username || '' ;
     if (command === '!cwtcommands') {
       return (`The CWT bot commands are ${commands.join(', ')}.`);
