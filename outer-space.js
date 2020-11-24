@@ -22,7 +22,9 @@ class OuterSpace {
     delete options.protocol;
     payload = JSON.stringify(payload);
     const posting = payload != null && method === 'POST';
-    if (posting) options.headers['Content-Length'] = payload.length;
+    if (posting) {
+      options.headers['Content-Length'] = Buffer.byteLength(payload);
+    }
     return new Promise((resolve, reject) => {
       console.log(options);
       const req = this.http.request(options, res => {
