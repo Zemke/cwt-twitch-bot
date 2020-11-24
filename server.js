@@ -71,7 +71,7 @@ class Server {
     } else if (action === 'part') {
       return this.part(channel, authToken);
     } else if (action.startsWith('auto')) {
-      return this.autoJoinPart(channel, action.split('-').pop());
+      return this.autoJoinPart(action.split('-').pop(), channel);
     } else {
       return Promise.reject("no handler");
     }
@@ -103,9 +103,15 @@ class Server {
       return Promise.reject(msg);
     }
     logger.info(`Auto-${action}ing ${channel}.`);
-    const joined = await this.tmiClient.join(channel);
-    this.channels.push(channel);
-    return joined;
+    if (action === 'join') {
+      const joined = await this.tmiClient.join(channel);
+      this.channels.push(channel);
+      return joined;
+    } else {
+      const parted = await this.tmiClient.part(channel);
+      this.channels.splice(this.channels.indexOf(channel), 1);
+      return parted;
+    }
   }
 
   // TODO listen to kick events more ways to join/part a channel
