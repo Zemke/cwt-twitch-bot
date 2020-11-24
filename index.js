@@ -104,7 +104,8 @@ if (require.main === module) {
     setTimeout(() => {
       logger.info(`Joined ${channel}, saying hello.`);
       let msg = `Hello, ${channel}, I'm standing by for all questions related to CWT.`;
-      const args = ["!cwtcommands", channel, 'TWITCH', 'https://twitch.tv/' + channel];
+      const channelForLink = channel.startsWith('#') ? channel.slice(1) : channel;
+      const args = ["!cwtcommands", channel, 'TWITCH', 'https://twitch.tv/' + channelForLink];
       const response = MessageHandler.handleMessage(...args).then(res => {
         msg += " These are my commands: " + res;
         client.say(channel, msg);

@@ -19,7 +19,7 @@ describe('format', () => {
     const message = {
       category: 'NEWS',
       author: "Zemke",
-      body: 'ZemkeCWT,https://twitch.tv/#komito8220,1–0 to Tade’s advantage. Two draws and two disconnects.',
+      body: 'ZemkeCWT,https://twitch.tv/komito8220,1–0 to Tade’s advantage. Two draws and two disconnects.',
       newsType: 'TWITCH_MESSAGE',
     };
     const actual = format(message);
