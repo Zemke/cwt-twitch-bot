@@ -70,6 +70,8 @@ class Server {
       return this.join(channel, authToken);
     } else if (action === 'part') {
       return this.part(channel, authToken);
+    } else if (action.startsWith('auto')) {
+      return this.autoJoinPart(channel, action.split('-').pop());
     } else {
       return Promise.reject("no handler");
     }
@@ -89,6 +91,21 @@ class Server {
     const parted = await this.tmiClient.part(channel);
     this.channels.splice(this.channels.indexOf(channel), 1);
     return parted;
+  }
+
+  // TODO Make sure auto join/part requests originates from Twitch Broker.
+  //  I can only think of a custom token right now.
+  async autoJoinPart(action, channel) {
+    const autoActive = await this.cwtClient.get(`/api/channel/${channel}/auto-active`);
+    if (!autoActive) {
+      const msg = `auto joining and parting is not active for ${channel}`;
+      logger.warn(msg);
+      return Promise.reject(msg);
+    }
+    logger.info(`Auto-${action}ing ${channel}.`);
+    const joined = await this.tmiClient.join(channel);
+    this.channels.push(channel);
+    return joined;
   }
 
   // TODO listen to kick events more ways to join/part a channel
