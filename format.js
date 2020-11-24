@@ -14,8 +14,16 @@ function format({category, author, body, newsType}) {
   } else if (newsType === "RATING") {
     const [gameId, home, away, scoreh, scorea, rating] = body.split(',');
     res += `${rating}d ${home} ${scoreh}–${scorea} ${away} (https://cwtsite.com/games/${gameId})`;
-  } else if (newsType === "STREAM" || newsType === "TWITCH_MESSAGE" || newsType === "DISCORD_MESSAGE") {
-    console.info("Ignoring newsType", newsType);
+  } else if (newsType === "STREAM") {
+    const [id, ...title] = body.split(',');
+    res += `live streamed “${title.join(',')}”`;
+    res += ` (https://www.twitch.tv/videos/${id})`;
+  } else if (newsType === "DISCORD_MESSAGE") {
+    const [from, _, ...content] = body.split(',');
+    res = `${from} via Discord: “${content.join(',')}”`;
+  } else if (newsType === "TWITCH_MESSAGE") {
+    const [from, _, ...content] = body.split(',');
+    res = `${from} via Twitch: “${content.join(',')}”`;
   } else if (newsType === "SCHEDULE") {
     let wrong = false;
     const [action, home, away, appointment] = body.split(',');
