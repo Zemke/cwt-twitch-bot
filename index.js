@@ -47,10 +47,14 @@ class Index {
             logger.info("Message is from this same Twitch channel.", channel);
             return;
           }
-          logger.info(`Scheduling for sending message to ${channel}`);
-          const formatted = format({...message, author: message.author.username});
-          logger.info(`sending "${formatted}" to ${channel}`);
-          this.tmiClient.say(channel, formatted);
+          try {
+            logger.info(`Scheduling for sending message to ${channel}`);
+            const formatted = format({...message, author: message.author.username});
+            logger.info(`sending "${formatted}" to ${channel}`);
+            this.tmiClient.say(channel, formatted);
+          } catch (err) {
+            logger.exception("Not sending message beause of formatting error", err);
+          }
           posted[channel].push(message.id);
         } else {
           logger.info(`${channel} already received message.`);
