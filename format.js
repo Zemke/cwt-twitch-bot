@@ -50,7 +50,7 @@ module.exports = format;
 
 if (require.main === module) {
   const [category, author, body, newsType] = process.argv.slice(2);
-  console.log(format({category, author, body, newsType}));
+  console.log('RES xx ' + format({category, author, body, newsType}));
   process.exit(0);
 }
 
