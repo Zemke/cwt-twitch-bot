@@ -39,7 +39,7 @@ class Index {
     logger.info("Listening to CWT messages");
     const posted = {};
     this.listener.listen(message => {
-      this.server.channels.forEach(channel => {
+      this.tmiClient.getChannels().forEach(channel => {
         if (!(channel in posted)) posted[channel] = [];
         if (!posted[channel].includes(message.id)) {
           if (message.newsType === 'TWITCH_MESSAGE'
@@ -106,7 +106,6 @@ if (require.main === module) {
   client.on("join", (channel, username, self) => {
     if (!self) return;
     logger.info(`Joining ${channel}, saying hello.`);
-    Server.pushChannel(channel);
     setTimeout(() => {
       logger.info(`Joined ${channel}, saying hello.`);
       let msg = `Hello, ${channel}, I'm standing by for all questions related to CWT.`;
@@ -122,7 +121,6 @@ if (require.main === module) {
   client.on("part", (channel, username, self) => {
     if (!self) return;
     logger.info(`Parting ${channel}, saying goodbye.`);
-    Server.sliceChannel(channel);
     let msg = `Hello, ${channel}, I'm standing by for all questions related to CWT.`;
     client.say(channel, "I'm off. Goodbye everyone! Catch up on the latest at cwtsite.com");
   });

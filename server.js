@@ -12,7 +12,6 @@ class Server {
     this.port = port;
     this.tmiClient = tmiClient;
     this.cwtClient = cwtClient;
-    this.channels = this.tmiClient.getChannels();
   }
 
   listen(ssl = false) {
@@ -99,24 +98,14 @@ class Server {
       return Promise.reject(msg);
     }
     logger.info(`Auto-${action}ing ${channel}.`);
-    action === 'join'
-        ? return await this.tmiClient.join(channel)
-        : return await this.tmiClient.part(channel);
+    return action === 'join'
+        ? await this.tmiClient.join(channel)
+        : await this.tmiClient.part(channel);
   }
 
   status(channel) {
-    logger.info('channels', this.channels);
-    return {joined: (this.channels.indexOf(channel) !== -1)};
-  }
-
-  sliceChannel(channel) {
-    const idx = this.channels.indexOf(channel);
-    if (idx !== -1) this.channels.slice(idx, 1);
-  }
-
-  pushChannel(channel) {
-    const idx = this.channels.indexOf(channel);
-    if (idx === -1) this.channels.push(channel);
+    logger.info('channels', this.tmiClient.getChannels());
+    return {joined: (this.tmiClient.getChannels().indexOf('#' + channel) !== -1)};
   }
 
   _end(res, code, body) {
