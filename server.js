@@ -12,7 +12,7 @@ class Server {
     this.port = port;
     this.tmiClient = tmiClient;
     this.cwtClient = cwtClient;
-    this.channels = [];
+    this.channels = this.tmiClient.getChannels();
   }
 
   listen(ssl = false) {
@@ -81,7 +81,6 @@ class Server {
     const isAllowed = await this.checkWithCwt(channel, authToken);
     if (!isAllowed) throw Error('Forbidden');
     const joined = await this.tmiClient.join(channel);
-    this.channels.push(channel);
     return joined;
   }
 
@@ -89,12 +88,9 @@ class Server {
     const isAllowed = await this.checkWithCwt(channel, authToken);
     if (!isAllowed) throw Error('Forbidden');
     const parted = await this.tmiClient.part(channel);
-    this.channels.splice(this.channels.indexOf(channel), 1);
     return parted;
   }
 
-  // TODO Make sure auto join/part requests originates from Twitch Broker.
-  //  I can only think of a custom token right now.
   async autoJoinPart(action, channel) {
     const autoActive = await this.cwtClient.get(`/api/channel/${channel}/auto-active`);
     if (!autoActive) {
@@ -103,23 +99,24 @@ class Server {
       return Promise.reject(msg);
     }
     logger.info(`Auto-${action}ing ${channel}.`);
-    if (action === 'join') {
-      const joined = await this.tmiClient.join(channel);
-      this.channels.push(channel);
-      return joined;
-    } else {
-      const parted = await this.tmiClient.part(channel);
-      this.channels.splice(this.channels.indexOf(channel), 1);
-      return parted;
-    }
+    action === 'join'
+        ? return await this.tmiClient.join(channel)
+        : return await this.tmiClient.part(channel);
   }
 
-  // TODO listen to kick events more ways to join/part a channel
-  //  to keep track
   status(channel) {
-    logger.info('channel', channel);
     logger.info('channels', this.channels);
     return {joined: (this.channels.indexOf(channel) !== -1)};
+  }
+
+  sliceChannel(channel) {
+    const idx = this.channels.indexOf(channel);
+    if (idx !== -1) this.channels.slice(idx, 1);
+  }
+
+  pushChannel(channel) {
+    const idx = this.channels.indexOf(channel);
+    if (idx === -1) this.channels.push(channel);
   }
 
   _end(res, code, body) {
