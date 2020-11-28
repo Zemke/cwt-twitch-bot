@@ -89,7 +89,7 @@ if (require.main === module) {
 
   const port = process.argv[2] || 1234;
   const Listener = require('./listener')({...options, path: '/api/message/listen'});
-  const Client = require('./client.js')(options);
+  const Client = require('./client.js')(options, process.env.THIRD_PARTY_TOKEN);
   const Server = require('./server')(port, client, Client);
   const MessageHandler = require('./handle.js')(Client);
   const index = new Index(client, Listener, Server, MessageHandler);

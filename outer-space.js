@@ -1,9 +1,13 @@
 class OuterSpace {
 
-  constructor(options) {
+  constructor(options, thirdPartyToken) {
     this.options = {
       ...options,
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        ...options?.headers,
+        'Content-Type': 'application/json',
+        'third-party-token': thirdPartyToken,
+      },
     };
     this.http = this.options.protocol === 'https'
         ? require('https') : require('http');
@@ -47,5 +51,5 @@ class OuterSpace {
   }
 }
 
-module.exports = options => new OuterSpace(options);
+module.exports = (...args) => new OuterSpace(...args);
 

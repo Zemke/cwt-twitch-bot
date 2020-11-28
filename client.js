@@ -3,8 +3,8 @@ const outerSpace = require('./outer-space.js');
 
 class Client {
 
-  constructor(options, cacheDuration) {
-    this.outerSpace = outerSpace(options);
+  constructor(options, thirdPartyToken, cacheDuration) {
+    this.outerSpace = outerSpace(options, thirdPartyToken);
     this.cache = {};
     this.neverCache = cacheDuration === 0;
     if (cacheDuration !== -1 && !this.neverCache) {
