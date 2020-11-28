@@ -16,9 +16,10 @@ class Index {
 
   async onMessage(target, context, msg) {
     try {
+      const targetFormatted = target.startsWith('#') ? target.slice(1) : target;
       const response = await this.messageHandler.handleMessage(
           msg, context["display-name"], 'TWITCH',
-          'https://twitch.tv/' + target);
+          'https://twitch.tv/' + targetFormatted);
       logger.info(`Responding with ${response} to ${target}`);
       this.tmiClient.say(target, response);
     } catch (e) {
