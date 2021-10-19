@@ -162,6 +162,9 @@ class MessageHandler {
                 return acc;
               }, {});
       const games = Object.keys(byRound).map(k => `${k}: ${byRound[k]}`);
+      if (games.length < 1) {
+        return "Playoffs haven't begun yet.";
+      }
       return ('The remaining games are ' + games.join(' — '));
     } else if (command === '!cwtwhatisthisthing') {
       return (`Crespo’s Worms Tournament (commonly known as CWT) is a tournament known for its \
