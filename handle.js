@@ -168,8 +168,8 @@ class MessageHandler {
       }
       return ('The remaining games are ' + games.join(' — '));
     } else if (command === '!cwtwhatisthisthing') {
-      return (`Crespo’s Worms Tournament (commonly known as CWT) is a tournament known for its \
-  high-level competition. It was founded by Crespo in July 2002 and has been hosted on a \
+      return (`Crespo’s Worms Tournament (commonly known as CWT) is a tournament known for its\
+  high-level competition. It was founded by Crespo in July 2002 and has been hosted on a\
   yearly basis ever since. More at https://worms2d.info/Crespo%27s_Worms_Tournament`);
     } else if (command === '!cwtrafkagrass') {
       const rafkaGrass = maps
