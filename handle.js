@@ -64,7 +64,7 @@ class MessageHandler {
     if (command === '!cwtcommands') {
       return (`The CWT bot commands are ${commands.join(', ')}.`);
     } else if (command === '!cwturl') {
-      return (`Thanks for asking, ${name}, the best site in the wormy world is of course cwtsite.com`);
+      return (`Thanks for asking, ${name}, the best site in the wormy world is of course https://cwtsite.com`);
     } else if (command.startsWith('!cwtchat')) {
       try {
         const message = command.slice(9);
@@ -88,7 +88,7 @@ class MessageHandler {
         const maps = await this.client.get(`/api/tournament/${tournament.id}/maps`);
         const hell = maps.filter(m => m.texture === 'Data\\Level\\Hell')
         return (`Hell terrain has been played ${hell.length} times this year. There's potential for more.
-  Track the playoffs Hell counter here: cwtsite.com/hell`);
+  Track the playoffs Hell counter here: https://cwtsite.com/hell`);
       } catch (e) {
         console.error(e);
         return `Sorry, that topic is too sad, ${name}.`;
@@ -106,7 +106,7 @@ class MessageHandler {
         .sort((o1, o2) => o2[1] - o1[1])
         .filter((_val, idx) => idx < 3)
         .map(x => `${x[0].split('\\').pop()} (${x[1]})`);
-      return (`The three most used terrains this year are ${result.join(', ')}. More at cwtsite.com/maps`);
+      return (`The three most used terrains this year are ${result.join(', ')}. More at https://cwtsite.com/maps`);
     } else if (command === '!cwtwinners') {
       const winners = (await this.client.get('/api/tournament'))
             .sort((t1, t2) => new Date(t1.created).getTime() - new Date(t2.created).getTime())
@@ -118,7 +118,7 @@ class MessageHandler {
               return acc;
             }, [])
             .map(t => `${t[0]} (${t[1].join(', ')})`);
-      return (`The CWT champions are ${winners.join(', ')}. More at cwtsite.com/archive`);
+      return (`The CWT champions are ${winners.join(', ')}. More at https://cwtsite.com/archive`);
     } else if (command === '!cwtschedule') {
       const schedule = (await this.client.get('/api/schedule'))
             .map(s => {
