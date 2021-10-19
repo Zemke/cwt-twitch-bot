@@ -90,7 +90,7 @@ class MessageHandler {
   Track the playoffs Hell counter here: cwtsite.com/hell`);
       } catch (e) {
         console.error(e);
-        respone(client, target, `Sorry, that topic is too sad, ${name}.`);
+        return `Sorry, that topic is too sad, ${name}.`;
       }
     } else if (command === '!cwtterrain') {
       const maps = await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
