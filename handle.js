@@ -53,10 +53,11 @@ class MessageHandler {
   constructor(client) {
     this.client = client;
     console.info("getting current tournament");
-    this.client.get('/api/tournament/current').then(res => this.tournament = res);
+    this.tournament = this.client.get('/api/tournament/current');
   }
 
   async handleMessage(msg, username, service, link) {
+    const tournament = await this.tournament;
     const command = msg.trim();
     console.info(`cmd ${username}:`, command);
     const name = username || '' ;
@@ -83,8 +84,8 @@ class MessageHandler {
       return (`Any marginally good bot can roll a dice, right? ${name} has rolled a ${dice}.`);
     } else if (command === '!cwthell') {
       try {
-        console.info("tournament", this.tournament);
-        const maps = await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
+        console.info("tournament", tournament);
+        const maps = await this.client.get(`/api/tournament/${tournament.id}/maps`);
         const hell = maps.filter(m => m.texture === 'Data\\Level\\Hell')
         return (`Hell terrain has been played ${hell.length} times this year. There's potential for more.
   Track the playoffs Hell counter here: cwtsite.com/hell`);
@@ -93,7 +94,7 @@ class MessageHandler {
         return `Sorry, that topic is too sad, ${name}.`;
       }
     } else if (command === '!cwtterrain') {
-      const maps = await this.client.get(`/api/tournament/${this.tournament.id}/maps`);
+      const maps = await this.client.get(`/api/tournament/${tournament.id}/maps`);
       const result = maps
         .reduce((acc, curr) => {
           if (curr.texture == null) return acc;
