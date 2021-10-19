@@ -176,7 +176,11 @@ class MessageHandler {
       const rafkaGrass = maps
         .filter(m => m.game.homeUser.id === rafkaId || m.game.awayUser.id === rafkaId)
         .filter(m => grassyTextures.includes(m.texture))
-      return (`Rafka has rocked ${rafkaGrass.length} grassy maps this year.`);
+      const rockeds = rafkaGrass.length;
+      if (rockeds.length < 1) {
+        return "Surprise, Rafka hasn't played grass at all so far.";
+      }
+      return (`Rafka has rocked ${rockeds} grassy map${rockeds > 1 && 's'} this year.`);
     } else if (command.startsWith('!cwt') && command !== '!cwt') {
       return (`Nothing I have to say about this, ${name}.`);
     }
