@@ -172,6 +172,7 @@ class MessageHandler {
   high-level competition. It was founded by Crespo in July 2002 and has been hosted on a\
   yearly basis ever since. More at https://worms2d.info/Crespo%27s_Worms_Tournament`);
     } else if (command === '!cwtrafkagrass') {
+      const maps = await this.client.get(`/api/tournament/${tournament.id}/maps`);
       const rafkaGrass = maps
         .filter(m => m.game.homeUser.id === rafkaId || m.game.awayUser.id === rafkaId)
         .filter(m => grassyTextures.includes(m.texture))
