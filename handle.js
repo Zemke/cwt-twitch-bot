@@ -188,7 +188,7 @@ if (require.main === module) {
     hostname: process.env.HOSTNAME,
     port: parseInt(process.env.PORT),
   };
-  const client = require('./client')(options, 0);
+  const client = require('./client')(options, process.env.THIRD_PARTY_TOKEN, 0);
   const messageHandler = new MessageHandler(client);
   messageHandler.handleMessage(message, username, service, link)
     .then(res => console.log('RES xx ' + res))
