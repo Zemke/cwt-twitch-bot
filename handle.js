@@ -87,8 +87,7 @@ class MessageHandler {
         console.info("tournament", tournament);
         const maps = await this.client.get(`/api/tournament/${tournament.id}/maps`);
         const hell = maps.filter(m => m.texture === 'Data\\Level\\Hell')
-        return (`Hell terrain has been played ${hell.length} times this year. There's potential for more.
-  Track the playoffs Hell counter here: https://cwtsite.com/hell`);
+        return (`Hell terrain has been played ${hell.length} times this year. There's potential for more. https://cwtsite.com/hell`);
       } catch (e) {
         console.error(e);
         return `Sorry, that topic is too sad, ${name}.`;
