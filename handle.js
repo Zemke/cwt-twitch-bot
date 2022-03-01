@@ -133,7 +133,7 @@ class MessageHandler {
               return `${s.homeUser.username}–${s.awayUser.username} on ${formatted}`;
             });
       if (!schedule.length) {
-        return ('No game have been scheduled unfortunately.');
+        return ('No games have been scheduled unfortunately.');
       } else {
         return (`The following games have been scheduled: ${schedule.join('; ')}.`);
       }
