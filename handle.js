@@ -126,11 +126,28 @@ class MessageHandler {
             })
             .filter(({appointment}) => appointment > Date.now())
             .map(s =>  {
+              const now = new Date();
               const d = s.appointment;
               const hours = d.getUTCHours() < 10 ? ('0' + d.getUTCHours()) : ("" + d.getUTCHours());
               const minutes = d.getUTCMinutes() < 10 ? ('0' + d.getUTCMinutes()) : ("" + d.getUTCMinutes());
-              const formatted = `${months[d.getUTCMonth()]}. ${d.getUTCDate()}, ${hours}:${minutes}`;
-              return `${s.homeUser.username}–${s.awayUser.username} on ${formatted}`;
+              let ret = `${s.homeUser.username}–${s.awayUser.username} `;
+              if (d.getUTCMonth() === now.getUTCMonth()
+                  && d.getUTCDate() === now.getUTCDate()
+                  && d.getUTCFullYear() === now.getUTCFullYear()) {
+                ret += 'today'
+              } else if (d.getUTCMonth() === now.getUTCMonth()
+                  && d.getUTCDate() === (now.getUTCDate()+1)
+                  && d.getUTCFullYear() === now.getUTCFullYear()) {
+                ret += 'tomorrow'
+              } else {
+                ret += `on ${months[d.getUTCMonth()]}. ${d.getUTCDate()}, `;
+              }
+              ret += ` at ${hours}:${minutes}`;
+              if (s.streams?.length) {
+                ret += ' live stream by '
+                ret += s.streams.map(({user}) => user.username).join(', ');
+              }
+              return ret;
             });
       if (!schedule.length) {
         return ('No games have been scheduled unfortunately.');
