@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const rafkaId = 29;
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const grassyTextures = [
   'Data\\Level\\-Farm',
   'Data\\Level\\Jungle',
