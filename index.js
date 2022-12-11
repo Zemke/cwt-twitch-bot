@@ -113,8 +113,7 @@ if (require.main === module) {
       const channelForLink = channel.startsWith('#') ? channel.slice(1) : channel;
       const args = ["!cwtcommands", channel, 'TWITCH', 'https://twitch.tv/' + channelForLink];
       const response = MessageHandler.handleMessage(...args).then(res => {
-        msg += " These are my commands: " + res;
-        client.say(channel, msg);
+        client.say(channel + " " + res, msg);
       });
     }, 1);
   });
